@@ -1,0 +1,23 @@
+---
+# tasks file for keepalived
+- name: keepalived install and setup 
+  block:
+    - name: Install keepalived
+      ansible.builtin.dnf:
+        name: keepalived
+        state: latest
+    - name: Copy keepalived config
+      ansible.builtin.template:
+        src: keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+        owner: root
+        group: root
+        mode: '644'
+    - name: Start keepalived
+      ansible.builtin.systemd_service:
+        name: keepalived
+        state: started
+        enabled: true
+  tags:
+    - keepalived
+    

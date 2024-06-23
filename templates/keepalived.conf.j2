@@ -1,0 +1,22 @@
+vrrp_track_process track_{{ keepalived_track_process }} {
+    process {{ keepalived_track_process }}
+    delay 1
+}
+
+vrrp_instance LB_VIP {
+    interface {{ ansible_default_ipv4.interface }}
+    state {{ hostvars[inventory_hostname].keepalived_state | default('backup', true) | upper }}
+    priority {{ (ansible_play_hosts | length | int + 100) - (ansible_play_hosts_all.index(inventory_hostname) | int ) }}
+    virtual_router_id {{ keepalived_virtual_router_id }} 
+    advert_int 1
+    authentication {
+        auth_type AH
+        auth_pass {{ keepalived_key }}
+    }
+    virtual_ipaddress {
+        {{ keepalived_virtual_ip }}
+    }
+    track_process {
+        track_{{ keepalived_track_process }}
+    }
+}
