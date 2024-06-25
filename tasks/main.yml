@@ -2,6 +2,13 @@
 # tasks file for keepalived
 - name: keepalived install and setup 
   block:
+    - name: Ensure /etc/keepalived ist available
+      file:
+        path: /etc/keepalived
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
     - name: Install keepalived
       ansible.builtin.dnf:
         name: keepalived

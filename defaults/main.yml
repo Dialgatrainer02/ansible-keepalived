@@ -4,3 +4,4 @@ keepalived_track_process: vault
 keepalived_virtual_ip: 192.168.0.200
 keepalived_key: 12345
 keepalived_virtual_router_id: 100
+

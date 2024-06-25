@@ -1,7 +1,17 @@
+global_defs {
+    enable_script_security
+}
+{% if keepalived_track_process is defined %}
 vrrp_track_process track_{{ keepalived_track_process }} {
     process {{ keepalived_track_process }}
     delay 1
 }
+{% endif %}
+{% if keepalivedscript is defined %}
+vrrp_script {{ keepalived_script_name }}
+  script: {{ keepalived_script_check_command }}
+  interval 5
+{% endif %}
 
 vrrp_instance LB_VIP {
     interface {{ ansible_default_ipv4.interface }}
@@ -16,7 +26,13 @@ vrrp_instance LB_VIP {
     virtual_ipaddress {
         {{ keepalived_virtual_ip }}
     }
+{% if keepalived_track_process is defined%}
     track_process {
         track_{{ keepalived_track_process }}
+    }
+{% endif %}
+{% if keepalived_script is defined %}
+    track_script {
+      {{ keepalived_script_name }}
     }
 }
