@@ -2,8 +2,13 @@
 # tasks file for keepalived
 - name: keepalived install and setup 
   block:
+    - name: stop keepalived if needed
+      ansible.builtin.systemd_service:
+        name: keepalived
+        state: stopped
+      ignore_errors: true
     - name: Ensure /etc/keepalived ist available
-      file:
+      ansible.builtin.file:
         path: /etc/keepalived
         state: directory
         owner: root
@@ -27,4 +32,4 @@
         enabled: true
   tags:
     - keepalived
-    
+
